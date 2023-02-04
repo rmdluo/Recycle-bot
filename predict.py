@@ -37,6 +37,31 @@ class Classifier:
 
         return self.classes[np.argmax(score_lite)], 100 * np.max(score_lite)
     
+    def string_predict(self, img_path):
+        img = cv2.imread(img_path)
+        img = cv2.resize(img, (224, 224))
+        if(self.floating_model):
+            img = np.float32(img)
+
+        predictions_lite = self.classify_lite(input_2=np.float32(np.expand_dims(img, 0)))['dense']
+        score_lite = tf.nn.softmax(predictions_lite)
+
+        recyclable = "not recyclable" if self.classes[np.argmax(score_lite)] == "trash" else "recyclable"
+
+        return "This image most likely belongs to {} with a {:.2f} percent confidence. Anyhow, {}!"\
+            .format(self.classes[np.argmax(score_lite)], 100 * np.max(score_lite), recyclable)
+    
+    def recyclable_predict(self, img_path):
+        img = cv2.imread(img_path)
+        img = cv2.resize(img, (224, 224))
+        if(self.floating_model):
+            img = np.float32(img)
+
+        predictions_lite = self.classify_lite(input_2=np.float32(np.expand_dims(img, 0)))['dense']
+        score_lite = tf.nn.softmax(predictions_lite)
+
+        return "Not recyclable :(" if self.classes[np.argmax(score_lite)] == "trash" else "Recyclable :)"
+
     def print_predict(self, img_path):
         img = cv2.imread(img_path)
         img = cv2.resize(img, (224, 224))

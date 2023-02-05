@@ -40,7 +40,7 @@ def upload_image():
 		file.save(os.path.join(UPLOAD_FOLDER, filename))
 		#print('upload_image filename: ' + filename)
 		flash('Image successfully uploaded and displayed below')
-		text = CLASSIFIER.recyclable_predict(os.path.join(UPLOAD_FOLDER, filename))
+		text = CLASSIFIER.string_predict(os.path.join(UPLOAD_FOLDER, filename))
 		return render_template('file_upload.html', filename=filename, text=text)
 	else:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
@@ -49,10 +49,6 @@ def upload_image():
 @app.route('/display/<filename>')
 def display_image(filename):
 	return redirect(url_for('static', filename='uploads/' + filename), code=301)
-
-@app.route('/recycle-text/<filename>')
-def get_text(filename):
-	return 
 
 if __name__ == "__main__": 
     app.run();
